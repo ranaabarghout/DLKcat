@@ -137,7 +137,7 @@ for j in ec_table:
     fid.write(j)
             
 fid.close()
-print 'Succesfully constructed ' + previous + ' file.'
+print('Succesfully constructed ' + previous + ' file.')
 os.chdir(prev_path)
 
 ################################################################################
