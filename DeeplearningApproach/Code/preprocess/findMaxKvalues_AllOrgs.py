@@ -260,7 +260,7 @@ def EC_string(csv_fid, feature_name):
                         data_string.append(row[3].lower() + '///' +\
                                             org_string + '////' + row[2])
                     except:
-                        print 'Organism not found in KEGG or BRENDA'
+                        print('Organism not found in KEGG or BRENDA')
         
             #Gets the associated not engineered pathways to the
             #EC number if present
@@ -310,7 +310,7 @@ for feature_name in features_list:
                 output = output+ec_number+'\t'+sub+'\t'+org+'\t'+str(max_values[i][j])+'\t'+ ec_pathways+'\n'
 
     
-        print 'Processed file ' + ec + ' ' + feature_name
+        print('Processed file ' + ec + ' ' + feature_name)
     #Write output:
     os.chdir(output_path)
     fid  = open('max_' + feature_name + '.txt','w')
