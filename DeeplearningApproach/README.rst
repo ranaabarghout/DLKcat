@@ -37,7 +37,9 @@ Usage
   - (4). Unzip the ``input.zip`` file under the ``Data`` directory
   .. code-block:: linux
 
-         unzip Data/input.zip
+         cd Data
+         unzip input.zip
+         cd ..
 
   - (5). Change directory to the ``Code/example`` under the DLKcat package
   .. code-block:: linux
