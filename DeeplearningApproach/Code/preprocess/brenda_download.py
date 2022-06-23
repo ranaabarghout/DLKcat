@@ -48,7 +48,7 @@ for i in dir_files:
                 fid.write(j)
             
             fid.close()
-            print 'Succesfully constructed ' + previous + ' file.'
+            print('Succesfully constructed ' + previous + ' file.')
             os.chdir(input_path)
 
         #Reset ec_table (initialize it in the first iteration):    
