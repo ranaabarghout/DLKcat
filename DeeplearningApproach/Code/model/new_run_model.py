@@ -213,8 +213,8 @@ if __name__ == "__main__":
     """Create a dataset and split it into train/dev/test."""
     dataset = list(zip(compounds, adjacencies, proteins, interactions))
     dataset = shuffle_dataset(dataset, 1234)
-    dataset_train, dataset_ = split_dataset(dataset, 0.8)
-    dataset_dev, dataset_test = split_dataset(dataset_, 0.5)
+    dataset_train, dataset_ = split_dataset(dataset, 0.7)
+    dataset_dev, dataset_test = split_dataset(dataset_, 0.33)
 
     """Set a model."""
     torch.manual_seed(1234)
