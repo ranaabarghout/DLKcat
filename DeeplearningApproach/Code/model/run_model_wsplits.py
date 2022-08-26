@@ -451,7 +451,7 @@ if __name__ == "__main__":
     """Create a dataset and split it into train/dev/test."""
     
     dataset = list(zip(compounds, adjacencies, proteins, interactions))
-    dataset_train, dataset_test, dataset_dev = split_data(dataset, split_type='type_0')
+    dataset_train, dataset_test, dataset_dev = split_data(dataset, split_type='type_2')
     
     # dataset = list(zip(compounds, adjacencies, proteins, interactions))
     # dataset = shuffle_dataset(dataset, 1234)
