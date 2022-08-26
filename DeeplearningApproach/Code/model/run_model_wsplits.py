@@ -463,7 +463,7 @@ if __name__ == "__main__":
     """Output files."""
     file_MAEs = '../../Data/Results/output/MAEs--' + setting + '.txt'
     file_model = '../../Data/Results/output/' + setting
-    MAEs = ('Epoch\tTime(sec)\tRMSE_train\tR2_train\tMAE_dev\tMAE_test\tRMSE_dev\tRMSE_test\tR2_dev\tR2_test')
+    MAEs = ('Epoch\tTime(sec)\tRMSE_train\tR2_train\tMAE_dev\tMAE_test\tRMSE_dev\tRMSE_test\tR2_dev\tR2_test\tR_dev (Pearson)\tR_test (Pearson)\tR_dev (Spearman)\tR_test (Spearman)')
     with open(file_MAEs, 'w') as f:
         f.write(MAEs + '\n')
 
@@ -485,7 +485,7 @@ if __name__ == "__main__":
         time = end - start
 
         MAEs = [epoch, time, rmse_train, r2_train, pearson_r_train, spearman_r_train, MAE_dev,
-                MAE_test, RMSE_dev, pearson_r_dev, spearman_r_dev, RMSE_test, R2_dev, R2_test, pearson_r_test, spearman_r_test]
+                MAE_test, RMSE_dev, RMSE_test, R2_dev, R2_test, pearson_r_dev, pearson_r_test, spearman_r_dev, spearman_r_test]
         tester.save_MAEs(MAEs, file_MAEs)
         tester.save_model(model, file_model)
 
