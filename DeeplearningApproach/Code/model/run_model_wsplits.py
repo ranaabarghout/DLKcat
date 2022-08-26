@@ -293,10 +293,8 @@ def split_data(data, input_data=['Compounds', 'Adjacencies', 'Proteins', 'Sequen
         count_dict = {}
         train, valid, test = [], [], []
         split_arr = []
-        print('UNIQUE SEQUENCES: ', unique_sequences)
         for seq in unique_sequences:
             count_dict[seq] = new_data[new_data[sequences]==seq].shape[0]
-            print(count_dict[seq])
         sorted_count_dict = {k: v for k, v in sorted(count_dict.items(), reverse=True, key=lambda item: item[1])}
         
         train_len = int(len(new_data)*split[0]/100) # This will need to be changed
