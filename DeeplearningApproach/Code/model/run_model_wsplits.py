@@ -171,7 +171,7 @@ def load_tensor(file_name, dtype):
     return [dtype(d).to(device) for d in np.load(file_name + '.npy', allow_pickle=True)]
 
 def load_array(file_name):
-    x = np.load(file_name)
+    x = np.load(file_name, allow_pickle=True)
     return x
 
 def load_pickle(file_name):
@@ -452,8 +452,8 @@ if __name__ == "__main__":
     adjacencies = load_tensor(dir_input + 'adjacencies', torch.FloatTensor)
     proteins = load_tensor(dir_input + 'proteins', torch.LongTensor)
     interactions = load_tensor(dir_input + 'regression', torch.FloatTensor)
-    sequences = load_array(dir_input + 'sequences', torch.LongTensor)
-    smiles = load_array(dir_input + 'smiles', torch.LongTensor)
+    sequences = load_array(dir_input + 'sequences')
+    smiles = load_array(dir_input + 'smiles')
     fingerprint_dict = load_pickle(dir_input + 'fingerprint_dict.pickle')
     word_dict = load_pickle(dir_input + 'sequence_dict.pickle')
     n_fingerprint = len(fingerprint_dict)
