@@ -154,11 +154,15 @@ class Tester(object):
         r2 = r2_score(testY,testPredict)
         p_correlation_test, p_value_test = stats.pearsonr(testY, testPredict)
         s_correlation_test, p_value_test = stats.pearsonr(testY, testPredict)
-        return MAE, rmse, r2, p_correlation_test, s_correlation_test
+        return MAE, rmse, r2, p_correlation_test, s_correlation_test, testY, testPredict
 
     def save_MAEs(self, MAEs, filename):
         with open(filename, 'a') as f:
             f.write('\t'.join(map(str, MAEs)) + '\n')
+    
+    def save_ys(self, ys, filename):
+        with open(filename, 'a') as f:
+            f.write('\t'.join(map(str, ys)) + '\n')
 
     def save_model(self, model, filename):
         torch.save(model.state_dict(), filename)
@@ -463,10 +467,16 @@ if __name__ == "__main__":
     """Output files."""
     file_MAEs = '../../Data/Results/output/MAEs--' + setting + '.txt'
     file_model = '../../Data/Results/output/' + setting
+    file_ys = '../../Data/Results/output/test_ys--' + setting + '.txt'
     MAEs = ('Epoch\tTime(sec)\tRMSE_train\tR2_train\tMAE_dev\tMAE_test\tRMSE_dev\tRMSE_test\tR2_dev\tR2_test\tR_dev (Pearson)\tR_test (Pearson)\tR_dev (Spearman)\tR_test (Spearman)')
+    ys = ('Real\tPredicted')
+    
     with open(file_MAEs, 'w') as f:
         f.write(MAEs + '\n')
 
+    with open(file_ys, 'w') as f:
+        f.write(ys + '\n')
+        
     """Start training."""
     print('Training...')
     print(MAEs)
@@ -478,15 +488,18 @@ if __name__ == "__main__":
             trainer.optimizer.param_groups[0]['lr'] *= lr_decay
 
         loss_train, rmse_train, r2_train, pearson_r_train, spearman_r_train = trainer.train(dataset_train)
-        MAE_dev, RMSE_dev, R2_dev, pearson_r_dev, spearman_r_dev = tester.test(dataset_dev)
-        MAE_test, RMSE_test, R2_test, pearson_r_test, spearman_r_test = tester.test(dataset_test)
+        MAE_dev, RMSE_dev, R2_dev, pearson_r_dev, spearman_r_dev, yreal_dev, ypred_dev = tester.test(dataset_dev)
+        MAE_test, RMSE_test, R2_test, pearson_r_test, spearman_r_test, yreal_test, ypred_test = tester.test(dataset_test)
 
         end = timeit.default_timer()
         time = end - start
 
         MAEs = [epoch, time, rmse_train, r2_train, pearson_r_train, spearman_r_train, MAE_dev,
                 MAE_test, RMSE_dev, RMSE_test, R2_dev, R2_test, pearson_r_dev, pearson_r_test, spearman_r_dev, spearman_r_test]
+        ys = [yreal_test, ypred_test]
         tester.save_MAEs(MAEs, file_MAEs)
+        tester.save_ys(ys, file_ys)
         tester.save_model(model, file_model)
 
         print('\t'.join(map(str, MAEs)))
+        #print('\t'.join(map(str, ys)))
