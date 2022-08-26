@@ -16,6 +16,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 from sklearn.metrics import mean_squared_error,r2_score
+from scipy import stats
 
 
 class KcatPrediction(nn.Module):
@@ -127,7 +128,9 @@ class Trainer(object):
             trainPredict.append(predicted_values)
         rmse_train = np.sqrt(mean_squared_error(trainCorrect,trainPredict))
         r2_train = r2_score(trainCorrect,trainPredict)
-        return loss_total, rmse_train, r2_train
+        p_correlation_train, p_value_train = stats.pearsonr(trainCorrect, trainPredict)
+        s_correlation_train, p_value_train = stats.spearmanr(trainCorrect, trainPredict)
+        return loss_total, rmse_train, r2_train, p_correlation_train, s_correlation_train
 
 
 class Tester(object):
@@ -149,7 +152,9 @@ class Tester(object):
         MAE = SAE / N  # mean absolute error.
         rmse = np.sqrt(mean_squared_error(testY,testPredict))
         r2 = r2_score(testY,testPredict)
-        return MAE, rmse, r2
+        p_correlation_test, p_value_test = stats.pearsonr(testY, testPredict)
+        s_correlation_test, p_value_test = stats.pearsonr(testY, testPredict)
+        return MAE, rmse, r2, p_correlation_test, s_correlation_test
 
     def save_MAEs(self, MAEs, filename):
         with open(filename, 'a') as f:
@@ -472,15 +477,15 @@ if __name__ == "__main__":
         if epoch % decay_interval == 0:
             trainer.optimizer.param_groups[0]['lr'] *= lr_decay
 
-        loss_train, rmse_train, r2_train = trainer.train(dataset_train)
-        MAE_dev, RMSE_dev, R2_dev = tester.test(dataset_dev)
-        MAE_test, RMSE_test, R2_test = tester.test(dataset_test)
+        loss_train, rmse_train, r2_train, pearson_r_train, spearman_r_train = trainer.train(dataset_train)
+        MAE_dev, RMSE_dev, R2_dev, pearson_r_dev, spearman_r_dev = tester.test(dataset_dev)
+        MAE_test, RMSE_test, R2_test, pearson_r_test, spearman_r_test = tester.test(dataset_test)
 
         end = timeit.default_timer()
         time = end - start
 
-        MAEs = [epoch, time, rmse_train, r2_train, MAE_dev,
-                MAE_test, RMSE_dev, RMSE_test, R2_dev, R2_test]
+        MAEs = [epoch, time, rmse_train, r2_train, pearson_r_train, spearman_r_train, MAE_dev,
+                MAE_test, RMSE_dev, pearson_r_dev, spearman_r_dev, RMSE_test, R2_dev, R2_test, pearson_r_test, spearman_r_test]
         tester.save_MAEs(MAEs, file_MAEs)
         tester.save_model(model, file_model)
 
