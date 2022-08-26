@@ -10,6 +10,7 @@ import sys
 import timeit
 import math
 import numpy as np
+import random
 import pandas as pd
 import torch
 import torch.nn as nn
@@ -188,14 +189,16 @@ def split_dataset(dataset, ratio):
     dataset_1, dataset_2 = dataset[:n], dataset[n:]
     return dataset_1, dataset_2
 
-def split_data(data, input_data=['Compounds', 'Adjacencies', 'Proteins', 'Sequences', 'Interactions', 'SMILES'], split_type='type_0', split=(70, 10, 20), random_state=1234):
+def split_data(data, input_data=['Compounds', 'Adjacencies', 'Proteins', 'Sequences', 'Interactions', 'SMILES'], cluster_file=None, split_type='type_0', split=(70, 10, 20), random_state=1234):
     """
     Parameters
     ----------
     data : list of zipped numby arrays
         THIS IS THE INPUT DATA FOR THE DATA SPLITTING THAT CAN BE INTEGRATED INTO THE PIPELINE.
     input_data : LIST, optional
-        The default is ['Compounds', 'Adjacencies', 'Proteins', 'Interactions'].
+        The default is ['Compounds', 'Adjacencies', 'Proteins', 'Interactions', 'SMILES', 'Clusters'].
+    cluster_file: Numpy array of pandas df
+        The default is None. If available, insert as needed.
     split_type : STRING, optional
         The default is 'type_0'. Currently, the model can split for 'type_2' and 'type_3'. More options will be added soon.
     split : TUPLE, optional
@@ -211,6 +214,7 @@ def split_data(data, input_data=['Compounds', 'Adjacencies', 'Proteins', 'Sequen
     dataset_val : TYPE
         The output of the dataset will be the same as the dataset_train, but for the VALIDATION set.
     """
+    
     df = pd.DataFrame(data, columns=input_data)
     compounds = input_data[0]
     adjacencies = input_data[1]
@@ -218,6 +222,10 @@ def split_data(data, input_data=['Compounds', 'Adjacencies', 'Proteins', 'Sequen
     sequences = input_data[3]
     values = input_data[4]
     smiles = input_data[5]
+    
+    if cluster_file is not None:
+        cluster_df = pd.DataFrame(cluster_file)
+        
     
 
 
@@ -419,7 +427,89 @@ def split_data(data, input_data=['Compounds', 'Adjacencies', 'Proteins', 'Sequen
          dataset_train = list(zip(compounds_train, adj_train, prot_train, values_train))
          dataset_test = list(zip(compounds_test, adj_test, prot_test, values_test))
          dataset_val = list(zip(compounds_val, adj_val, prot_val, values_val))
+         
+    elif split_type=='type_4':
+        new_data = df
+        clustered_df = new_data.merge(cluster_df, how='left', on='Sequences')
+        groups = [clustered_df for _, df in clustered_df.groupby('Cluster')]
+        random.seed(random_state)
+        random.shuffle(groups)
+        new_data = pd.concat(groups).reset_index(drop=True)
+        
+        unique_clusters = new_data['Cluster'].unique()
+        count_dict = {}
+        train, valid, test = [], [], []
+        split_arr = []
+        # for clust in unique_clusters:
+        #     count_dict[clust] = new_data[new_data['Cluster']==comp].shape[0]
+        # sorted_count_dict = {k: v for k, v in sorted(count_dict.items(), reverse=True, key=lambda item: item[1])}
+         
+        train_len = int(len(new_data)*split[0]/100) # This will need to be changed
+        valid_len = int(len(new_data)*split[1]/100) # This will need to be changed
+        test_len = int(len(new_data)*split[2]/100) # This will need to be changed
 
+        print('Train, val, and test lengths, respectively: ', train_len, valid_len, test_len)
+
+
+        ## TO BE CONTINUED! ## 
+        # count = 0
+        # for j in range(len(unique_clusters)):
+        #     clust = unique_clusters[j]
+        #     for i in range(len(new_data)):
+                
+        # for i in range(len(new_data)):
+        #     if count < train_len:
+                
+        # for seq, c in sorted_count_dict.items():
+        #     if count < train_len:
+        #         train.append(seq)
+        #     elif count < valid_len+train_len:
+        #         valid.append(seq)
+        #     else:
+        #         test.append(seq)
+        #     count += c
+
+        # for i, val in new_data.iterrows():
+        #     if val[smiles] in train:
+        #         split_arr.append(0)
+        #     elif val[smiles] in valid:
+        #         split_arr.append(1)
+        #     else:
+        #         split_arr.append(2)
+
+        # unique, counts = np.unique(split_arr, return_counts=True)
+
+        #  #print(len(split_arr))
+        # print("Train:", counts[np.where(unique==0)])
+        # print("Val:", counts[np.where(unique==1)])
+        # print("Test:", counts[np.where(unique==2)])
+         
+        # new_data['split_label'] = split_arr
+         
+        # train_dataset = new_data.loc[new_data['split_label']==0]
+        # val_dataset = new_data.loc[new_data['split_label']==1]
+        # test_dataset = new_data.loc[new_data['split_label']==2]
+    
+        # compounds_train = train_dataset[compounds].to_numpy()
+        # adj_train = train_dataset[adjacencies].to_numpy()
+        # prot_train = train_dataset[proteins].to_numpy()
+        # values_train = train_dataset[values].to_numpy()
+     
+        # compounds_test = test_dataset[compounds].to_numpy()
+        # adj_test = test_dataset[adjacencies].to_numpy()
+        # prot_test = test_dataset[proteins].to_numpy()
+        # values_test = test_dataset[values].to_numpy()
+     
+        # compounds_val = val_dataset[compounds].to_numpy()
+        # adj_val = val_dataset[adjacencies].to_numpy()
+        # prot_val = val_dataset[proteins].to_numpy()
+        # values_val = val_dataset[values].to_numpy()
+        
+        # dataset_train = list(zip(compounds_train, adj_train, prot_train, values_train))
+        # dataset_test = list(zip(compounds_test, adj_test, prot_test, values_test))
+        # dataset_val = list(zip(compounds_val, adj_val, prot_val, values_val))
+        
+    
         
     return dataset_train, dataset_test, dataset_val
 
@@ -452,6 +542,7 @@ if __name__ == "__main__":
     interactions = load_tensor(dir_input + 'regression', torch.FloatTensor)
     sequences = load_array(dir_input + 'sequences.npy')
     smiles = load_array(dir_input + 'smiles.npy')
+    cluster_df = load_array(dir_input + 'clusters.npy')
     fingerprint_dict = load_pickle(dir_input + 'fingerprint_dict.pickle')
     word_dict = load_pickle(dir_input + 'sequence_dict.pickle')
     n_fingerprint = len(fingerprint_dict)
@@ -462,7 +553,7 @@ if __name__ == "__main__":
 
     """Create a dataset and split it into train/dev/test."""
     
-    dataset = list(zip(compounds, adjacencies, proteins, sequences, interactions, smiles))
+    dataset = list(zip(compounds, adjacencies, proteins, sequences, interactions, smiles, cluster_df))
     dataset_train, dataset_test, dataset_dev = split_data(dataset, split_type='type_3')
     
     # dataset = list(zip(compounds, adjacencies, proteins, interactions))
