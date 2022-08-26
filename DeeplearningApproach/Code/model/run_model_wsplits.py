@@ -185,7 +185,7 @@ def split_dataset(dataset, ratio):
     dataset_1, dataset_2 = dataset[:n], dataset[n:]
     return dataset_1, dataset_2
 
-def split_data(data, input_data=['Compounds', 'Adjacencies', 'Proteins', 'Interactions'], split_type='type_0', split=(70, 10, 20), random_state=1234):
+def split_data(data, input_data=['Compounds', 'Adjacencies', 'Proteins', 'Sequences', 'Interactions', 'SMILES'], split_type='type_0', split=(70, 10, 20), random_state=1234):
     """
     Parameters
     ----------
@@ -212,7 +212,9 @@ def split_data(data, input_data=['Compounds', 'Adjacencies', 'Proteins', 'Intera
     compounds = input_data[0]
     adjacencies = input_data[1]
     proteins = input_data[2]
-    values = input_data[3]
+    sequences = input_data[3]
+    values = input_data[4]
+    smiles = input_data[5]
     
 
 
@@ -260,16 +262,21 @@ def split_data(data, input_data=['Compounds', 'Adjacencies', 'Proteins', 'Intera
         compounds_train = train_dataset[compounds].to_numpy()
         adj_train = train_dataset[adjacencies].to_numpy()
         prot_train = train_dataset[proteins].to_numpy()
+        seq_train = train_dataset[sequences].to_numpy()
         values_train = train_dataset[values].to_numpy()
+        smiles_train = train_dataset[smiles].to_numpy()
     
         compounds_test = test_dataset[compounds].to_numpy()
         adj_test = test_dataset[adjacencies].to_numpy()
         prot_test = test_dataset[proteins].to_numpy()
+        seq_test = train_dataset[sequences].to_numpy()
         values_test = test_dataset[values].to_numpy()
+        smiles_test = test_dataset[smiles].to_numpy()
     
         compounds_val = val_dataset[compounds].to_numpy()
         adj_val = val_dataset[adjacencies].to_numpy()
         prot_val = val_dataset[proteins].to_numpy()
+        seq_val = train_dataset[sequences].to_numpy()
         values_val = val_dataset[values].to_numpy()
         
         dataset_train = list(zip(compounds_train, adj_train, prot_train, values_train))
@@ -279,13 +286,13 @@ def split_data(data, input_data=['Compounds', 'Adjacencies', 'Proteins', 'Intera
     elif split_type=='type_2':
         new_data = df 
         
-        unique_sequences = new_data[proteins].unique()
+        unique_sequences = new_data[sequences].unique()
         count_dict = {}
         train, valid, test = [], [], []
         split_arr = []
         print('UNIQUE SEQUENCES: ', unique_sequences)
         for seq in unique_sequences:
-            count_dict[seq] = new_data[new_data[proteins]==seq].shape[0]
+            count_dict[seq] = new_data[new_data[sequences]==seq].shape[0]
             print(count_dict[seq])
         sorted_count_dict = {k: v for k, v in sorted(count_dict.items(), reverse=True, key=lambda item: item[1])}
         
@@ -306,9 +313,9 @@ def split_data(data, input_data=['Compounds', 'Adjacencies', 'Proteins', 'Intera
             count += c
 
         for i, val in new_data.iterrows():
-            if val[proteins] in train:
+            if val[sequences] in train:
                 split_arr.append(0)
-            elif val[proteins] in valid:
+            elif val[sequences] in valid:
                 split_arr.append(1)
             else:
                 split_arr.append(2)
@@ -348,12 +355,12 @@ def split_data(data, input_data=['Compounds', 'Adjacencies', 'Proteins', 'Intera
     elif split_type=='type_3':
          new_data = df 
          
-         unique_compounds = new_data[compounds].unique()
+         unique_compounds = new_data[smiles].unique()
          count_dict = {}
          train, valid, test = [], [], []
          split_arr = []
          for comp in unique_compounds:
-             count_dict[comp] = new_data[new_data[compounds]==comp].shape[0]
+             count_dict[comp] = new_data[new_data[smiles]==comp].shape[0]
          sorted_count_dict = {k: v for k, v in sorted(count_dict.items(), reverse=True, key=lambda item: item[1])}
          
          train_len = int(len(new_data)*split[0]/100) # This will need to be changed
@@ -373,9 +380,9 @@ def split_data(data, input_data=['Compounds', 'Adjacencies', 'Proteins', 'Intera
              count += c
 
          for i, val in new_data.iterrows():
-             if val[compounds] in train:
+             if val[smiles] in train:
                  split_arr.append(0)
-             elif val[compounds] in valid:
+             elif val[smiles] in valid:
                  split_arr.append(1)
              else:
                  split_arr.append(2)
@@ -442,6 +449,7 @@ if __name__ == "__main__":
     adjacencies = load_tensor(dir_input + 'adjacencies', torch.FloatTensor)
     proteins = load_tensor(dir_input + 'proteins', torch.LongTensor)
     interactions = load_tensor(dir_input + 'regression', torch.FloatTensor)
+    sequences = load_tensor(dir_input + 'sequences', torch.LongTensor)
     fingerprint_dict = load_pickle(dir_input + 'fingerprint_dict.pickle')
     word_dict = load_pickle(dir_input + 'sequence_dict.pickle')
     n_fingerprint = len(fingerprint_dict)
@@ -452,7 +460,7 @@ if __name__ == "__main__":
 
     """Create a dataset and split it into train/dev/test."""
     
-    dataset = list(zip(compounds, adjacencies, proteins, interactions))
+    dataset = list(zip(compounds, adjacencies, proteins, sequences interactions))
     dataset_train, dataset_test, dataset_dev = split_data(dataset, split_type='type_2')
     
     # dataset = list(zip(compounds, adjacencies, proteins, interactions))
