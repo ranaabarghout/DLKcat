@@ -450,6 +450,7 @@ if __name__ == "__main__":
     proteins = load_tensor(dir_input + 'proteins', torch.LongTensor)
     interactions = load_tensor(dir_input + 'regression', torch.FloatTensor)
     sequences = load_tensor(dir_input + 'sequences', torch.LongTensor)
+    smiles = load_tensor(dir_input + 'smiles', torch.LongTensor)
     fingerprint_dict = load_pickle(dir_input + 'fingerprint_dict.pickle')
     word_dict = load_pickle(dir_input + 'sequence_dict.pickle')
     n_fingerprint = len(fingerprint_dict)
@@ -460,7 +461,7 @@ if __name__ == "__main__":
 
     """Create a dataset and split it into train/dev/test."""
     
-    dataset = list(zip(compounds, adjacencies, proteins, sequences interactions))
+    dataset = list(zip(compounds, adjacencies, proteins, sequences, interactions, smiles))
     dataset_train, dataset_test, dataset_dev = split_data(dataset, split_type='type_2')
     
     # dataset = list(zip(compounds, adjacencies, proteins, interactions))
