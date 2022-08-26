@@ -325,7 +325,7 @@ def split_data(data, input_data=['Compounds', 'Adjacencies', 'Proteins', 'Sequen
 
         unique, counts = np.unique(split_arr, return_counts=True)
 
-        print(len(split_arr))
+        #print(len(split_arr))
         print("Train:", counts[np.where(unique==0)])
         print("Val:", counts[np.where(unique==1)])
         print("Test:", counts[np.where(unique==2)])
@@ -392,7 +392,7 @@ def split_data(data, input_data=['Compounds', 'Adjacencies', 'Proteins', 'Sequen
 
          unique, counts = np.unique(split_arr, return_counts=True)
 
-         print(len(split_arr))
+         #print(len(split_arr))
          print("Train:", counts[np.where(unique==0)])
          print("Val:", counts[np.where(unique==1)])
          print("Test:", counts[np.where(unique==2)])
