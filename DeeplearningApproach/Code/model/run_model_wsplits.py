@@ -553,7 +553,7 @@ if __name__ == "__main__":
 
     """Create a dataset and split it into train/dev/test."""
     
-    dataset = list(zip(compounds, adjacencies, proteins, sequences, interactions, smiles, cluster_df))
+    dataset = list(zip(compounds, adjacencies, proteins, sequences, interactions, smiles))
     dataset_train, dataset_test, dataset_dev = split_data(dataset, split_type='type_0')
     
     # dataset = list(zip(compounds, adjacencies, proteins, interactions))
