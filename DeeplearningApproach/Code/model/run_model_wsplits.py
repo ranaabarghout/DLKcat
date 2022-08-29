@@ -224,7 +224,7 @@ def split_data(data, input_data=['Compounds', 'Adjacencies', 'Proteins', 'Sequen
     smiles = input_data[5]
     
     if cluster_file is not None:
-        cluster_df = pd.DataFrame(cluster_file)
+        cluster_df = (cluster_file)
         
     
 
@@ -536,7 +536,8 @@ if __name__ == "__main__":
     interactions = load_tensor(dir_input + 'regression', torch.FloatTensor)
     sequences = load_array(dir_input + 'sequences.npy')
     smiles = load_array(dir_input + 'smiles.npy')
-    cluster_df = load_array(dir_input + 'clusters.npy')
+    #cluster_df = load_array(dir_input + 'clusters.npy')
+    cluster_df = pd.read_csv(dir_input + 'clusters_df.csv')
     fingerprint_dict = load_pickle(dir_input + 'fingerprint_dict.pickle')
     word_dict = load_pickle(dir_input + 'sequence_dict.pickle')
     n_fingerprint = len(fingerprint_dict)
