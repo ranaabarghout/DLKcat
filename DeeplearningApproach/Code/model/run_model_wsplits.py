@@ -154,7 +154,7 @@ class Tester(object):
         rmse = np.sqrt(mean_squared_error(testY,testPredict))
         r2 = r2_score(testY,testPredict)
         p_correlation_test, p_value_test = stats.pearsonr(testY, testPredict)
-        s_correlation_test, p_value_test = stats.pearsonr(testY, testPredict)
+        s_correlation_test, p_value_test = stats.spearmanr(testY, testPredict)
         return MAE, rmse, r2, p_correlation_test, s_correlation_test, testY, testPredict
 
     def save_MAEs(self, MAEs, filename):
