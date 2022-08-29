@@ -504,9 +504,6 @@ def split_data(data, input_data=['Compounds', 'Adjacencies', 'Proteins', 'Sequen
         dataset_train = list(zip(compounds_train, adj_train, prot_train, values_train))
         dataset_test = list(zip(compounds_test, adj_test, prot_test, values_test))
         dataset_val = list(zip(compounds_val, adj_val, prot_val, values_val))
-
-     
-    
         
     return dataset_train, dataset_test, dataset_val
 
