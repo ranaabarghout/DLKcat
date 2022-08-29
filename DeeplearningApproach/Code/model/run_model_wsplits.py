@@ -439,11 +439,14 @@ def split_data(data, input_data=['Compounds', 'Adjacencies', 'Proteins', 'Sequen
         train_len = int(len(new_data)*split[0]/100) # This will need to be changed
         valid_len = int(len(new_data)*split[1]/100) # This will need to be changed
         test_len = int(len(new_data)*split[2]/100) # This will need to be changed
+    
         clustered_df = new_data.merge(cluster_df, how='left', on='Sequences')
         groups = [clustered_df for _, df in clustered_df.groupby('Cluster')]
         random.seed(random_state)
         random.shuffle(groups)
         new_data = pd.concat(groups).reset_index(drop=True)
+        
+        print('Length of df for type 4: ', len(new_data))
         
         unique_clusters = new_data['Cluster'].unique()
         count_dict = {}
