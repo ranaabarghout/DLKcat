@@ -472,7 +472,7 @@ def split_data(data, input_data=['Compounds', 'Adjacencies', 'Proteins', 'Sequen
 
         print('Train, val, and test lengths, respectively: ', train_len, valid_len, test_len)
 
-        cluster = new_data['Cluster']
+        cluster = 'Cluster'
         
         count = 0
         for seq, c in sorted_count_dict.items():
