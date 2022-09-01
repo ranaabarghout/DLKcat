@@ -436,9 +436,26 @@ def split_data(data, input_data=['Compounds', 'Adjacencies', 'Proteins', 'Sequen
          
     elif split_type=='type_4':
         new_data = df
+        
+        
+        # Converting sequence columns to type string
+        new_data['Sequences'] = new_data['Sequences'].astype('|S')
+        cluster_df['Sequences'] = cluster_df['Sequences'].astype('|S')
+        
         print('OG DF:', new_data.head())
         print('Sequences in OG DF:', new_data['Sequences'].dtypes)
         print('Sequences in Cluster DF:', cluster_df['Sequences'].dtypes)
+        
+        
+        unique_nd = new_data['Sequences'].unique()
+        unique_cdf = cluster_df['Sequences'].unique()
+        
+        print('Num unique in new_data: ', unique_nd.shape)
+        print('Num unique in cluster_df: ', unique_cdf.shape)
+        
+        new_arr = np.concatenate((unique_nd, unique_cdf))
+        print('Num unique in concat. array: ', (np.unique((new_array))[0].shape))
+        
         train_len = int(len(new_data)*split[0]/100) # This will need to be changed
         valid_len = int(len(new_data)*split[1]/100) # This will need to be changed
         test_len = int(len(new_data)*split[2]/100) # This will need to be changed
