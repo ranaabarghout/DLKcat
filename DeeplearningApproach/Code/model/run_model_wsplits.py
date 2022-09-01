@@ -470,7 +470,7 @@ def split_data(data, input_data=['Compounds', 'Adjacencies', 'Proteins', 'Sequen
         random.shuffle(groups)
         new_data = pd.concat(groups).reset_index(drop=True)
         
-        print(len(new_data)))
+        print(len(new_data))
         
         print('Length of df for type 4: ', len(new_data))
         
