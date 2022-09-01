@@ -472,6 +472,8 @@ def split_data(data, input_data=['Compounds', 'Adjacencies', 'Proteins', 'Sequen
 
         print('Train, val, and test lengths, respectively: ', train_len, valid_len, test_len)
 
+        cluster = new_data['Cluster']
+        
         count = 0
         for seq, c in sorted_count_dict.items():
             if count < train_len:
@@ -481,11 +483,12 @@ def split_data(data, input_data=['Compounds', 'Adjacencies', 'Proteins', 'Sequen
             else:
                 test.append(seq)
             count += c
+            
 
         for i, val in new_data.iterrows():
-            if val[smiles] in train:
+            if val[cluster] in train:
                 split_arr.append(0)
-            elif val[smiles] in valid:
+            elif val[cluster] in valid:
                 split_arr.append(1)
             else:
                 split_arr.append(2)
