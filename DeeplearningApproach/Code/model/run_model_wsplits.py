@@ -437,8 +437,8 @@ def split_data(data, input_data=['Compounds', 'Adjacencies', 'Proteins', 'Sequen
     elif split_type=='type_4':
         new_data = df
         print('OG DF:', new_data.head())
-        print('Sequences in OG DF:', new_data['Sequences'])
-        print('Sequences in Cluster DF:', cluster_df['Sequences'])
+        print('Sequences in OG DF:', new_data['Sequences'].dtypes)
+        print('Sequences in Cluster DF:', cluster_df['Sequences'].dtypes)
         train_len = int(len(new_data)*split[0]/100) # This will need to be changed
         valid_len = int(len(new_data)*split[1]/100) # This will need to be changed
         test_len = int(len(new_data)*split[2]/100) # This will need to be changed
