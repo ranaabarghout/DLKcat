@@ -455,7 +455,7 @@ def split_data(data, input_data=['Compounds', 'Adjacencies', 'Proteins', 'Sequen
         
         new_arr = np.concatenate((unique_nd, unique_cdf))
         new_arr, _ = np.unique(new_arr)
-        print('Num unique in concat. array: ', new_arr.shape))
+        print('Num unique in concat. array: ', new_arr.shape)
         
         train_len = int(len(new_data)*split[0]/100) # This will need to be changed
         valid_len = int(len(new_data)*split[1]/100) # This will need to be changed
