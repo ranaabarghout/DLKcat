@@ -465,12 +465,12 @@ def split_data(data, input_data=['Compounds', 'Adjacencies', 'Proteins', 'Sequen
         print('Shape of clustered_df before shuffling before dropnan: ', len(clustered_df))
         clustered_df.dropna(inplace=True)
         print('Shape of clustered_df before shuffling after dropnan: ', len(clustered_df))
-        groups = [clustered_df for _, df in clustered_df.groupby('Cluster')]
+        groups = [clustered_df for _, clustered_df in clustered_df.groupby('Cluster')]
         random.seed(random_state)
         random.shuffle(groups)
         new_data = pd.concat(groups).reset_index(drop=True)
         
-        print(new_data.head())
+        print(len(new_data)))
         
         print('Length of df for type 4: ', len(new_data))
         
