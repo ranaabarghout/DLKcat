@@ -442,37 +442,21 @@ def split_data(data, input_data=['Compounds', 'Adjacencies', 'Proteins', 'Sequen
         new_data['Sequences'] = new_data['Sequences'].astype(str)
         cluster_df['Sequences'] = cluster_df['Sequences'].astype(str)
         
-        print('OG DF:', new_data.head())
-        print('Sequences in OG DF:', new_data['Sequences'].dtypes)
-        print('Sequences in Cluster DF:', cluster_df['Sequences'].dtypes)
-        
-        
-        unique_nd = new_data['Sequences'].unique()
-        unique_cdf = cluster_df['Sequences'].unique()
-        
-        print('Num unique in new_data: ', unique_nd.shape)
-        print('Num unique in cluster_df: ', unique_cdf.shape)
-        
-        new_arr = np.concatenate((unique_nd, unique_cdf), axis=None)
-        new_arr = np.unique(new_arr)
-        print('Num unique in concat. array: ', new_arr.shape)
+       
+       
         
         train_len = int(len(new_data)*split[0]/100) # This will need to be changed
         valid_len = int(len(new_data)*split[1]/100) # This will need to be changed
         test_len = int(len(new_data)*split[2]/100) # This will need to be changed
     
         clustered_df = new_data.merge(cluster_df, how='left', on='Sequences')
-        print('Shape of clustered_df before shuffling before dropnan: ', len(clustered_df))
         clustered_df.dropna(inplace=True)
-        print('Shape of clustered_df before shuffling after dropnan: ', len(clustered_df))
         groups = [clustered_df for _, clustered_df in clustered_df.groupby('Cluster')]
         random.seed(random_state)
         random.shuffle(groups)
         new_data = pd.concat(groups).reset_index(drop=True)
         
-        print(len(new_data))
         
-        print('Length of df for type 4: ', len(new_data))
         
         unique_clusters = new_data['Cluster'].unique()
         count_dict = {}
