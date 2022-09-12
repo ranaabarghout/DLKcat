@@ -556,7 +556,7 @@ if __name__ == "__main__":
     sequences = load_array(dir_input + 'sequences.npy')
     smiles = load_array(dir_input + 'smiles.npy')
     #cluster_df = load_array(dir_input + 'clusters.npy')
-    cluster_df = pd.read_csv(dir_input + 'clusters_df.csv')
+    #cluster_df = pd.read_csv(dir_input + 'clusters_df.csv')
     fingerprint_dict = load_pickle(dir_input + 'fingerprint_dict.pickle')
     word_dict = load_pickle(dir_input + 'sequence_dict.pickle')
     n_fingerprint = len(fingerprint_dict)
