@@ -452,7 +452,7 @@ def split_data(data, input_data=['Compounds', 'Adjacencies', 'Proteins', 'Sequen
         clustered_df = new_data.merge(cluster_df, how='left', on='Sequences')
         clustered_df.dropna(inplace=True)
         groups = [clustered_df for _, clustered_df in clustered_df.groupby('Cluster')]
-        random.seed(random_state)
+        random.seed(random_seed)
         random.shuffle(groups)
         new_data = pd.concat(groups).reset_index(drop=True)
         
@@ -576,7 +576,7 @@ if __name__ == "__main__":
     # dataset_dev, dataset_test = split_dataset(dataset_, 0.33)
 
     """Set a model."""
-    torch.manual_seed(1234)
+    torch.manual_seed(random_seed)
     model = KcatPrediction().to(device)
     trainer = Trainer(model)
     tester = Tester(model)
