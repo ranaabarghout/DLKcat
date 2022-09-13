@@ -452,7 +452,7 @@ def split_data(data, input_data=['Compounds', 'Adjacencies', 'Proteins', 'Sequen
         clustered_df = new_data.merge(cluster_df, how='left', on='Sequences')
         clustered_df.dropna(inplace=True)
         groups = [clustered_df for _, clustered_df in clustered_df.groupby('Cluster')]
-        random.seed(random_seed)
+        random.seed(random_state)
         random.shuffle(groups)
         new_data = pd.concat(groups).reset_index(drop=True)
         
