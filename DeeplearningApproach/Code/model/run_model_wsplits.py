@@ -556,7 +556,7 @@ if __name__ == "__main__":
     sequences = load_array(dir_input + 'sequences.npy')
     smiles = load_array(dir_input + 'smiles.npy')
     #cluster_df = load_array(dir_input + 'clusters.npy')
-    #cluster_df = pd.read_csv(dir_input + 'clusters_df.csv')
+    cluster_df = pd.read_csv(dir_input + 'clusters_df.csv')
     fingerprint_dict = load_pickle(dir_input + 'fingerprint_dict.pickle')
     word_dict = load_pickle(dir_input + 'sequence_dict.pickle')
     n_fingerprint = len(fingerprint_dict)
@@ -568,7 +568,7 @@ if __name__ == "__main__":
     """Create a dataset and split it into train/dev/test."""
     random_state = 0
     dataset = list(zip(compounds, adjacencies, proteins, sequences, interactions, smiles))
-    dataset_train, dataset_test, dataset_dev = split_data(dataset, split_type='type_4', random_state=random_state)
+    dataset_train, dataset_test, dataset_dev = split_data(dataset, split_type='type_4', random_state=random_state, cluster_file=cluster_df)
     
     # dataset = list(zip(compounds, adjacencies, proteins, interactions))
     # dataset = shuffle_dataset(dataset, 1234)
