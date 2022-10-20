@@ -566,9 +566,9 @@ if __name__ == "__main__":
     # 394 and 474 when radius=1 and ngram=2
 
     """Create a dataset and split it into train/dev/test."""
-    random_state = 42
+    random_state = 0
     dataset = list(zip(compounds, adjacencies, proteins, sequences, interactions, smiles))
-    dataset_train, dataset_test, dataset_dev = split_data(dataset, split_type='type_0', random_state=random_state, cluster_file=cluster_df)
+    dataset_train, dataset_test, dataset_dev = split_data(dataset, split_type='type_3', random_state=random_state, cluster_file=cluster_df)
     
     # dataset = list(zip(compounds, adjacencies, proteins, interactions))
     # dataset = shuffle_dataset(dataset, 1234)
