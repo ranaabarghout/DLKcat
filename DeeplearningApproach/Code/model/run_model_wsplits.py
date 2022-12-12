@@ -570,10 +570,10 @@ if __name__ == "__main__":
     """Create a dataset and split it into train/dev/test."""
     random_state = 2
     torch.manual_seed(random_state)
-    random.seed(seed)
-    np.random.seed(seed)
-    torch.cuda.manual_seed(seed)
-    torch.cuda.manual_seed_all(seed)
+    random.seed(random_state)
+    np.random.seed(random_state)
+    torch.cuda.manual_seed(random_state)
+    torch.cuda.manual_seed_all(random_state)
     dataset = list(zip(compounds, adjacencies, proteins, sequences, interactions, smiles))
     dataset_train, dataset_test, dataset_dev = split_data(dataset, split_type='type_4', random_state=random_state, cluster_file=cluster_df)
     
