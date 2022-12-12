@@ -564,9 +564,15 @@ if __name__ == "__main__":
     # print(n_fingerprint)  # 3958
     # print(n_word)  # 8542
     # 394 and 474 when radius=1 and ngram=2
-
+    torch.manual_seed(random_state)
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.cuda.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+    
+    
     """Create a dataset and split it into train/dev/test."""
-    random_state = 1234
+    random_state = 2
     dataset = list(zip(compounds, adjacencies, proteins, sequences, interactions, smiles))
     dataset_train, dataset_test, dataset_dev = split_data(dataset, split_type='type_4', random_state=random_state, cluster_file=cluster_df)
     
@@ -576,7 +582,6 @@ if __name__ == "__main__":
     # dataset_dev, dataset_test = split_dataset(dataset_, 0.33)
 
     """Set a model."""
-    torch.manual_seed(random_state)
     model = KcatPrediction().to(device)
     trainer = Trainer(model)
     tester = Tester(model)
