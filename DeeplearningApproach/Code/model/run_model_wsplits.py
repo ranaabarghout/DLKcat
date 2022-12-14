@@ -568,7 +568,7 @@ if __name__ == "__main__":
     
     
     """Create a dataset and split it into train/dev/test."""
-    random_state = 2
+    random_state = 0
     torch.manual_seed(random_state)
     random.seed(random_state)
     np.random.seed(random_state)
